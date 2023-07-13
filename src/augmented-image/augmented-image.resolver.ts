@@ -7,7 +7,7 @@ import { AugmentedImage } from './models/augmented-image.model.js';
 export class AugmentedImageResolver {
   constructor(private readonly augmentedImageService: AugmentedImageService) {}
 
-  @Query(() => AugmentedImage)
+  @Query(() => [AugmentedImage])
   public async getAllAugmentedImages() {
     return this.augmentedImageService.getAllImages();
   }
