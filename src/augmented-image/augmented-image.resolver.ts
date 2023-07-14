@@ -1,7 +1,7 @@
 import { Resolver, Query } from '@nestjs/graphql';
 
 import { AugmentedImageService } from './augmented-image.service.js';
-import { AugmentedImage } from './models/augmented-image.model.js';
+import { AugmentedImage } from './entities/augmented-image.entity.js';
 
 @Resolver()
 export class AugmentedImageResolver {

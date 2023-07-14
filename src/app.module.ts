@@ -4,7 +4,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { AugmentedImageModule } from './augmented-image/augmented-image.module.js';
+import { UserModule } from './user/user.module.js';
+import { CompanyModule } from './company/company.module.js';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { AugmentedImageModule } from './augmented-image/augmented-image.module.j
       autoSchemaFile: true,
       sortSchema: true,
     }),
-    AugmentedImageModule,
+    UserModule,
+    CompanyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
