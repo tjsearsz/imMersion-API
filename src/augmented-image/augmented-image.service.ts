@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AugmentedImage } from './models/augmented-image.model.js';
+import { AugmentedImage } from './entities/augmented-image.entity.js';
 
 @Injectable()
 export class AugmentedImageService {
