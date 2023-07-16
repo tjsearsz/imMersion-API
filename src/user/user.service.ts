@@ -23,8 +23,8 @@ export class UserService {
     return `This action returns a #${id} user`;
   }*/
 
-  public async findOne(userId: string): Promise<User> {
-    return this.userModel.findById(userId).lean().exec();
+  public async findUserByEmail(email: string): Promise<User> {
+    return this.userModel.findOne({ email }).lean().exec();
   }
 
   public async update(
@@ -39,5 +39,9 @@ export class UserService {
 
   remove(id: number) {
     return `This action removes a #${id} user`;
+  }
+
+  public async AuthenticateUser(email: string): Promise<User | null> {
+    return this.userModel.findOne({ email }).lean().exec();
   }
 }

@@ -1,9 +1,12 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Types } from 'mongoose';
 
 @Schema({ timestamps: true })
 @ObjectType()
 export class User {
+  id: Types.ObjectId;
+
   @Prop({ required: true })
   @Field({ description: 'First Name of the user' })
   firstName: string;
@@ -12,7 +15,7 @@ export class User {
   @Field({ description: 'Last name of the user' })
   lastName: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, index: true, unique: true })
   @Field({ description: 'Email of the user' })
   email: string;
 
