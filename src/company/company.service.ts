@@ -1,11 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { CreateCompanyInput } from './dto/create-company.input';
-import { UpdateCompanyInput } from './dto/update-company.input';
+import { CreateCompanyInput } from './dto/create-company.input.js';
+import { UpdateCompanyInput } from './dto/update-company.input.js';
+import { Company } from './entities/company.entity.js';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, Types } from 'mongoose';
 
 @Injectable()
 export class CompanyService {
-  create(createCompanyInput: CreateCompanyInput) {
-    return 'This action adds a new company';
+  constructor(
+    @InjectModel(Company.name) private readonly companyModel: Model<Company>,
+  ) {}
+
+  public async create(
+    userId: Types.ObjectId,
+    createCompanyInput: CreateCompanyInput,
+  ): Promise<Company> {
+    return (
+      await this.companyModel.create({ userId, ...createCompanyInput })
+    ).toObject();
+  }
+
+  public async findByUserId(userId: string): Promise<Company[]> {
+    return this.companyModel
+      .find({ user: new Types.ObjectId(userId) })
+      .lean()
+      .exec();
   }
 
   findAll() {
@@ -16,8 +35,14 @@ export class CompanyService {
     return `This action returns a #${id} company`;
   }
 
-  update(id: number, updateCompanyInput: UpdateCompanyInput) {
-    return `This action updates a #${id} company`;
+  public async update(
+    id: string,
+    updateCompanyInput: Omit<UpdateCompanyInput, 'id'>,
+  ): Promise<Company | null> {
+    return this.companyModel
+      .findByIdAndUpdate(id, updateCompanyInput)
+      .lean()
+      .exec();
   }
 
   remove(id: number) {

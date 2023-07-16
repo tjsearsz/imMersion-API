@@ -1,12 +1,45 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Schema as mongooseSchema, Types } from 'mongoose';
+import { EOwnership } from '../../enums/EOwnership.js';
+import IOwnership from '../../interfaces/IOwnership.js';
+import { User } from '../../user/entities/user.entity.js';
 
+@Schema({ timestamps: true })
 @ObjectType()
-export class Branch {
+export class Branch implements IOwnership {
+  @Prop({ required: true })
   @Field({ description: 'Address of the branch' })
-  address: string;
+  address: string; //TODO: IMPROVE THIS
 
+  @Prop({ required: true, default: false })
   @Field({
-    description: 'Determine whether this branch is still available or not',
+    description: 'Determines whether this branch is still available or not',
   })
-  enabled: boolean;
+  isEnabled: boolean;
+
+  @Prop({
+    type: [
+      {
+        type: mongooseSchema.Types.ObjectId,
+        refPath: 'ancestorModel',
+        required: true,
+      },
+    ],
+    required: true,
+    validate: (array: Types.ObjectId[]) => array.length > 0,
+  })
+  ancestors: Types.ObjectId[];
+
+  @Prop({ required: true, enum: [User.name, EOwnership.Company] }) //TODO: Check if the user.name works here
+  ancestorModel: string;
+
+  @Prop({
+    type: mongooseSchema.Types.ObjectId,
+    ref: EOwnership.Company,
+    required: true,
+  })
+  immediateAncestor: Types.ObjectId;
 }
+
+export const BranchSchema = SchemaFactory.createForClass(Branch);
