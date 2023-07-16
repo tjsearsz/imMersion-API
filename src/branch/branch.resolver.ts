@@ -1,15 +1,17 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
-import { BranchService } from './branch.service';
-import { Branch } from './entities/branch.entity';
-import { CreateBranchInput } from './dto/create-branch.input';
-import { UpdateBranchInput } from './dto/update-branch.input';
+import { BranchService } from './branch.service.js';
+import { Branch } from './entities/branch.entity.js';
+import { CreateBranchInput } from './dto/create-branch.input.js';
+import { UpdateBranchInput } from './dto/update-branch.input.js';
 
 @Resolver(() => Branch)
 export class BranchResolver {
   constructor(private readonly branchService: BranchService) {}
 
   @Mutation(() => Branch)
-  createBranch(@Args('createBranchInput') createBranchInput: CreateBranchInput) {
+  createBranch(
+    @Args('createBranchInput') createBranchInput: CreateBranchInput,
+  ): Promise<Branch> {
     return this.branchService.create(createBranchInput);
   }
 
@@ -24,8 +26,11 @@ export class BranchResolver {
   }
 
   @Mutation(() => Branch)
-  updateBranch(@Args('updateBranchInput') updateBranchInput: UpdateBranchInput) {
-    return this.branchService.update(updateBranchInput.id, updateBranchInput);
+  updateBranch(
+    @Args('updateBranchInput')
+    { id, ...updateBranchPayload }: UpdateBranchInput,
+  ) {
+    return this.branchService.update(id, updateBranchPayload);
   }
 
   @Mutation(() => Branch)

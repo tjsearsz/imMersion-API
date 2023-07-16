@@ -1,8 +1,10 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { JobService } from './job.service.js';
 import { Job } from './entities/job.entity.js';
+import { AugmentedImage } from './entities/augmented-image.entity.js';
 import { CreateJobInput } from './dto/create-job.input.js';
 import { UpdateJobInput } from './dto/update-job.input.js';
+import { UpdateJobImageInput } from './dto/update-job-image.input.js';
 
 @Resolver(() => Job)
 export class JobResolver {
@@ -11,6 +13,18 @@ export class JobResolver {
   @Mutation(() => Job)
   createJob(@Args('createJobInput') createJobInput: CreateJobInput) {
     return this.jobService.create(createJobInput);
+  }
+
+  @Mutation(() => AugmentedImage, {
+    name: 'updateAugmentedImage',
+  })
+  public async updateAugmentedImageJob(
+    @Args('augmentedImageInput', {
+      description: 'AugmentedImage to be updated in a job',
+    })
+    augementedImageInput: UpdateJobImageInput,
+  ): Promise<Job> {
+    return this.jobService.updateAugmentedImage(augementedImageInput);
   }
 
   @Query(() => [Job], { name: 'job' })
@@ -24,8 +38,12 @@ export class JobResolver {
   }
 
   @Mutation(() => Job)
-  updateJob(@Args('updateJobInput') updateJobInput: UpdateJobInput) {
-    return this.jobService.update(updateJobInput.id, updateJobInput);
+  public async updateJob(
+    @Args('updateJobInput') updateJobInput: UpdateJobInput,
+  ): Promise<Job | null> {
+    //TODO: CHECK THIS ERROR INSTEAD OF NULL
+    const { id, ...updateJobPayload } = updateJobInput;
+    return this.jobService.update(id, updateJobPayload);
   }
 
   @Mutation(() => Job)

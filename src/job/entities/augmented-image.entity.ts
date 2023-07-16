@@ -6,7 +6,7 @@ import { EOwnership } from 'src/enums/EOwnership.js';*/
 
 @Schema({ timestamps: true })
 @ObjectType()
-export class AugmentedImage2 {
+export class AugmentedImage {
   @Prop({ required: true })
   @Field({
     description: 'URL location for the Model to be rendered for this Image',
@@ -46,4 +46,4 @@ export class AugmentedImage2 {
 }
 
 export const AugmentedImageSchema =
-  SchemaFactory.createForClass(AugmentedImage2);
+  SchemaFactory.createForClass(AugmentedImage);

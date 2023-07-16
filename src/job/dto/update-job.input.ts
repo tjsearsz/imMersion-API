@@ -1,8 +1,14 @@
-import { CreateJobInput } from './create-job.input';
-import { InputType, Field, Int, PartialType } from '@nestjs/graphql';
+import { IsMongoId } from 'class-validator';
+import { CreateJobInput } from './create-job.input.js';
+import { InputType, Field, OmitType } from '@nestjs/graphql';
+// import { PickTypesWrapper } from '../../common/graphql-mapped-types.js';
 
 @InputType()
-export class UpdateJobInput extends PartialType(CreateJobInput) {
-  @Field(() => Int)
-  id: number;
+export class UpdateJobInput extends OmitType(CreateJobInput, [
+  'augmentedImage',
+  'branchId',
+]) {
+  @IsMongoId()
+  @Field({ description: 'ID of the Job' })
+  id: string;
 }
