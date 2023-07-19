@@ -14,7 +14,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     email: string,
     password: string,
   ): Promise<Omit<User, 'password'>> {
-    console.log('el email ', email);
     const user = await this.authService.AuthenticateUser(email, password);
 
     if (!user) {

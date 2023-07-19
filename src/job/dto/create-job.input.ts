@@ -1,6 +1,7 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { AugmentedImageInput } from './augmented-image.input.js';
-import { IsMongoId } from 'class-validator';
+import { IsMongoId, IsUrl, IsOptional, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
 @InputType()
 export class CreateJobInput {
@@ -10,15 +11,13 @@ export class CreateJobInput {
   @Field({ description: 'Complete description of the new Job' })
   description: string;
 
+  @IsOptional()
+  @IsUrl()
   @Field({ description: 'URL to redirect if available', nullable: true })
   redirectURL?: string;
 
-  @Field({
-    description: 'New jobs will always be disabled by default',
-    defaultValue: false,
-  })
-  isEnabled: boolean;
-
+  @ValidateNested()
+  @Type(() => AugmentedImageInput)
   @Field(() => AugmentedImageInput, {
     description: 'Augmented Image for this Job',
   })

@@ -8,6 +8,8 @@ import { User } from '../../user/entities/user.entity.js';
 @Schema({ timestamps: true })
 @ObjectType()
 export class Branch implements IOwnership {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   @Field({ description: 'Address of the branch' })
   address: string; //TODO: IMPROVE THIS
@@ -22,7 +24,6 @@ export class Branch implements IOwnership {
     type: [
       {
         type: mongooseSchema.Types.ObjectId,
-        refPath: 'ancestorModel',
         required: true,
       },
     ],
@@ -30,9 +31,6 @@ export class Branch implements IOwnership {
     validate: (array: Types.ObjectId[]) => array.length > 0,
   })
   ancestors: Types.ObjectId[];
-
-  @Prop({ required: true, enum: [User.name, EOwnership.Company] }) //TODO: Check if the user.name works here
-  ancestorModel: string;
 
   @Prop({
     type: mongooseSchema.Types.ObjectId,

@@ -3,16 +3,19 @@ import { BranchService } from './branch.service.js';
 import { Branch } from './entities/branch.entity.js';
 import { CreateBranchInput } from './dto/create-branch.input.js';
 import { UpdateBranchInput } from './dto/update-branch.input.js';
+import { CurrentUser } from '../decorators/currentUser.js';
+import { IUserSummary } from '../auth/interfaces/IUserSummary.js';
 
 @Resolver(() => Branch)
 export class BranchResolver {
   constructor(private readonly branchService: BranchService) {}
 
   @Mutation(() => Branch)
-  createBranch(
+  async createBranch(
     @Args('createBranchInput') createBranchInput: CreateBranchInput,
+    @CurrentUser() user: IUserSummary,
   ): Promise<Branch> {
-    return this.branchService.create(createBranchInput);
+    return this.branchService.create(user.userId, createBranchInput);
   }
 
   @Query(() => [Branch], { name: 'branch' })
@@ -20,17 +23,27 @@ export class BranchResolver {
     return this.branchService.findAll();
   }
 
-  @Query(() => Branch, { name: 'branch' })
+  /*@Query(() => Branch, { name: 'branch' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.branchService.findOne(id);
-  }
+  }*/
 
   @Mutation(() => Branch)
-  updateBranch(
+  async updateBranch(
     @Args('updateBranchInput')
     { id, ...updateBranchPayload }: UpdateBranchInput,
-  ) {
-    return this.branchService.update(id, updateBranchPayload);
+  ): Promise<Branch> {
+    const updatedBranch = await this.branchService.update(
+      id,
+      updateBranchPayload,
+    );
+
+    //TODO: remove business logic from resolvers
+    if (!updatedBranch) {
+      throw Error('Branch with that ID does not exist'); //TODO: Improve errors
+    }
+
+    return updatedBranch;
   }
 
   @Mutation(() => Branch)

@@ -1,21 +1,26 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { JobService } from './job.service.js';
 import { Job } from './entities/job.entity.js';
-import { AugmentedImage } from './entities/augmented-image.entity.js';
+// import { AugmentedImage } from './entities/augmented-image.entity.js';
 import { CreateJobInput } from './dto/create-job.input.js';
 import { UpdateJobInput } from './dto/update-job.input.js';
 import { UpdateJobImageInput } from './dto/update-job-image.input.js';
+import { CurrentUser } from '../decorators/currentUser.js';
+import { IUserSummary } from '../auth/interfaces/IUserSummary.js';
 
 @Resolver(() => Job)
 export class JobResolver {
   constructor(private readonly jobService: JobService) {}
 
   @Mutation(() => Job)
-  createJob(@Args('createJobInput') createJobInput: CreateJobInput) {
-    return this.jobService.create(createJobInput);
+  async createJob(
+    @Args('createJobInput') createJobInput: CreateJobInput,
+    @CurrentUser() user: IUserSummary,
+  ): Promise<Job> {
+    return this.jobService.create(user.userId, createJobInput);
   }
 
-  @Mutation(() => AugmentedImage, {
+  @Mutation(() => Job, {
     name: 'updateAugmentedImage',
   })
   public async updateAugmentedImageJob(
@@ -24,7 +29,15 @@ export class JobResolver {
     })
     augementedImageInput: UpdateJobImageInput,
   ): Promise<Job> {
-    return this.jobService.updateAugmentedImage(augementedImageInput);
+    const updatedJob = await this.jobService.updateAugmentedImage(
+      augementedImageInput,
+    );
+
+    if (!updatedJob) {
+      throw new Error('Job with that ID does not exist');
+    }
+
+    return updatedJob;
   }
 
   @Query(() => [Job], { name: 'job' })
@@ -40,10 +53,15 @@ export class JobResolver {
   @Mutation(() => Job)
   public async updateJob(
     @Args('updateJobInput') updateJobInput: UpdateJobInput,
-  ): Promise<Job | null> {
-    //TODO: CHECK THIS ERROR INSTEAD OF NULL
+  ): Promise<Job> {
     const { id, ...updateJobPayload } = updateJobInput;
-    return this.jobService.update(id, updateJobPayload);
+    const updatedJob = await this.jobService.update(id, updateJobPayload);
+
+    if (!updatedJob) {
+      throw new Error('Job with that ID does not exist');
+    }
+
+    return updatedJob;
   }
 
   @Mutation(() => Job)

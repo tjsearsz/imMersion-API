@@ -5,13 +5,33 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Job } from './entities/job.entity.js';
 import { UpdateJobImageInput } from './dto/update-job-image.input.js';
+import { BranchService } from '../branch/branch.service.js';
 
 @Injectable()
 export class JobService {
-  constructor(@InjectModel(Job.name) private readonly jobModel: Model<Job>) {}
+  constructor(
+    @InjectModel(Job.name) private readonly jobModel: Model<Job>,
+    private readonly branchService: BranchService,
+  ) {}
 
-  public async create(createJobInput: CreateJobInput): Promise<Job> {
-    return (await this.jobModel.create(createJobInput)).toObject();
+  public async create(
+    userId: Types.ObjectId,
+    createJobInput: CreateJobInput,
+  ): Promise<Job> {
+    const { branchId, ...rest } = createJobInput;
+
+    const branchFound = await this.branchService.findOne(branchId);
+
+    if (!branchFound) {
+      throw new Error('Branch does not exist');
+    }
+    return (
+      await this.jobModel.create({
+        ...rest,
+        ancestors: [userId, branchFound._id, branchFound.immediateAncestor],
+        immediateAncestor: branchFound._id,
+      })
+    ).toObject();
   }
 
   public async updateAugmentedImage({
