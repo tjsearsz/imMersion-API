@@ -6,7 +6,6 @@ import {
   AugmentedImage,
   AugmentedImageSchema,
 } from './augmented-image.entity.js';
-import { User } from '../../user/entities/user.entity.js';
 import { EOwnership } from '../../enums/EOwnership.js';
 import IOwnership from '../../interfaces/IOwnership.js';
 
@@ -23,9 +22,9 @@ export class Job implements IOwnership {
 
   @Prop()
   @Field({ description: 'URL to redirect if available', nullable: true })
-  redirectionURL?: string;
+  redirectURL?: string;
 
-  @Prop({ required: true })
+  @Prop({ required: true, default: false })
   @Field({ description: 'Determines whether the job is active or not' })
   isEnabled: boolean;
 
@@ -40,7 +39,6 @@ export class Job implements IOwnership {
     type: [
       {
         type: mongooseSchema.Types.ObjectId,
-        refPath: 'ancestorModel',
         required: true,
       },
     ],
@@ -48,12 +46,6 @@ export class Job implements IOwnership {
     validate: (array: Types.ObjectId[]) => array.length > 0,
   })
   ancestors: Types.ObjectId[];
-
-  @Prop({
-    required: true,
-    enum: [User.name, EOwnership.Company, EOwnership.Branch],
-  })
-  ancestorModel: string;
 
   @Prop({
     type: mongooseSchema.Types.ObjectId,

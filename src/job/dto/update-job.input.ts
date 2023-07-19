@@ -11,4 +11,9 @@ export class UpdateJobInput extends OmitType(CreateJobInput, [
   @IsMongoId()
   @Field({ description: 'ID of the Job' })
   id: string;
+
+  @Field({
+    description: 'Enables/disables the Job',
+  })
+  isEnabled: boolean;
 }

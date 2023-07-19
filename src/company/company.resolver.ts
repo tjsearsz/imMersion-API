@@ -3,22 +3,21 @@ import { CompanyService } from './company.service.js';
 import { Company } from './entities/company.entity.js';
 import { CreateCompanyInput } from './dto/create-company.input.js';
 import { UpdateCompanyInput } from './dto/update-company.input.js';
-import { Types } from 'mongoose';
+import { CurrentUser } from '../decorators/currentUser.js';
+import { IUserSummary } from 'src/auth/interfaces/IUserSummary.js';
 
 @Resolver(() => Company)
 export class CompanyResolver {
   constructor(private readonly companyService: CompanyService) {}
 
   @Mutation(() => Company)
-  createCompany(
+  async createCompany(
     @Args('createCompanyInput') createCompanyInput: CreateCompanyInput,
-  ) {
-    return this.companyService.create(
-      new Types.ObjectId(), //TODO: REMOVE THIS
-      {
-        ...createCompanyInput,
-      },
-    );
+    @CurrentUser() user: IUserSummary,
+  ): Promise<Company> {
+    return this.companyService.create(user.userId, {
+      ...createCompanyInput,
+    });
   }
 
   /*@Query(() => [Company], { name: 'company' })

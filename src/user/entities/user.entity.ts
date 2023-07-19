@@ -5,7 +5,7 @@ import { Types } from 'mongoose';
 @Schema({ timestamps: true })
 @ObjectType()
 export class User {
-  id: Types.ObjectId;
+  _id: Types.ObjectId;
 
   @Prop({ required: true })
   @Field({ description: 'First Name of the user' })

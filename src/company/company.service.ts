@@ -31,8 +31,10 @@ export class CompanyService {
     return `This action returns all company`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  public async findOne(
+    companyId: string | Types.ObjectId,
+  ): Promise<Company | null> {
+    return this.companyModel.findById(companyId).lean().exec();
   }
 
   public async update(

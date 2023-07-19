@@ -6,6 +6,8 @@ import IOwnership from '../../interfaces/IOwnership.js';
 @Schema({ timestamps: true })
 @ObjectType()
 export class Company implements IOwnership {
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   @Field({ description: 'Name of the company' })
   name: string;
@@ -18,7 +20,7 @@ export class Company implements IOwnership {
   @Field({ description: 'Determines whether the company is active or not' })
   isEnabled: boolean;
 
-  @Prop({ required: true, type: mongooseSchema.Types.ObjectId })
+  @Prop({ required: true, type: mongooseSchema.Types.ObjectId, ref: 'User' })
   userId: Types.ObjectId;
 
   /*@Prop({
