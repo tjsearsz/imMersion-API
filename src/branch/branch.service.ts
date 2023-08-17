@@ -17,7 +17,7 @@ export class BranchService {
     userId: Types.ObjectId,
     createBranchInput: CreateBranchInput,
   ): Promise<Branch> {
-    const { companyId, ...rest } = createBranchInput;
+    const { companyId, address, ...rest } = createBranchInput;
 
     const companyFound = await this.companyService.findOne(companyId);
 
@@ -28,6 +28,9 @@ export class BranchService {
     return (
       await this.branchModel.create({
         ...rest,
+        address: {
+          coordinates: address,
+        },
         ancestors: [userId, companyFound._id],
         immediateAncestor: companyFound._id,
       })

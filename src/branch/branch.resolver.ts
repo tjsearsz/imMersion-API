@@ -1,6 +1,6 @@
 import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
 import { BranchService } from './branch.service.js';
-import { Branch } from './entities/branch.entity.js';
+import { Branch, BranchGQL } from './entities/branch.entity.js';
 import { CreateBranchInput } from './dto/create-branch.input.js';
 import { UpdateBranchInput } from './dto/update-branch.input.js';
 import { CurrentUser } from '../decorators/currentUser.js';
@@ -14,8 +14,16 @@ export class BranchResolver {
   async createBranch(
     @Args('createBranchInput') createBranchInput: CreateBranchInput,
     @CurrentUser() user: IUserSummary,
-  ): Promise<Branch> {
-    return this.branchService.create(user.userId, createBranchInput);
+  ): Promise<BranchGQL> {
+    const {
+      address: { coordinates },
+      ...rest
+    } = await this.branchService.create(user.userId, createBranchInput);
+
+    return {
+      ...rest,
+      address: coordinates,
+    };
   }
 
   @Query(() => [Branch], { name: 'branch' })
@@ -32,7 +40,7 @@ export class BranchResolver {
   async updateBranch(
     @Args('updateBranchInput')
     { id, ...updateBranchPayload }: UpdateBranchInput,
-  ): Promise<Branch> {
+  ): Promise<BranchGQL> {
     const updatedBranch = await this.branchService.update(
       id,
       updateBranchPayload,
@@ -43,7 +51,12 @@ export class BranchResolver {
       throw Error('Branch with that ID does not exist'); //TODO: Improve errors
     }
 
-    return updatedBranch;
+    const { address, ...rest } = updatedBranch;
+
+    return {
+      ...rest,
+      address: address.coordinates,
+    };
   }
 
   @Mutation(() => Branch)

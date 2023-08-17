@@ -1,18 +1,25 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, Float } from '@nestjs/graphql';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as mongooseSchema, Types } from 'mongoose';
 import { EOwnership } from '../../enums/EOwnership.js';
 import IOwnership from '../../interfaces/IOwnership.js';
 import { User } from '../../user/entities/user.entity.js';
+import { Point, PointSchema } from './point.entity.js';
+
+export type BranchGQL = Omit<Branch, 'address'> & { address: number[] };
 
 @Schema({ timestamps: true })
 @ObjectType()
 export class Branch implements IOwnership {
   _id: Types.ObjectId;
 
-  @Prop({ required: true })
-  @Field({ description: 'Address of the branch' })
-  address: string; //TODO: IMPROVE THIS
+  @Prop({
+    type: PointSchema,
+    required: true,
+    index: '2dsphere',
+  })
+  @Field(() => [Float], { description: 'Address of the branch' })
+  address: Point;
 
   @Prop({ required: true, default: false })
   @Field({
