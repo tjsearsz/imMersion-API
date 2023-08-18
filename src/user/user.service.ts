@@ -27,12 +27,11 @@ export class UserService {
     return this.userModel.findOne({ email }).lean().exec();
   }
 
-  public async update(
-    userId: string,
-    updateUserInput: Omit<UpdateUserInput, 'id'>,
-  ): Promise<User | null> {
+  public async update(updateUserInput: UpdateUserInput): Promise<User | null> {
     return this.userModel
-      .findByIdAndUpdate(userId, updateUserInput, { new: true })
+      .findOneAndUpdate({ email: updateUserInput.email }, updateUserInput, {
+        new: true,
+      })
       .lean()
       .exec();
   }
