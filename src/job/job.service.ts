@@ -48,6 +48,13 @@ export class JobService {
       .exec();
   }
 
+  public async findByBranchId(branchId: string): Promise<Job[]> {
+    return this.jobModel
+      .find({ immediateAncestor: new Types.ObjectId(branchId) })
+      .lean()
+      .exec();
+  }
+
   public async findByUserId(userId: Types.ObjectId): Promise<Job[]> {
     return this.jobModel.find({ ancestors: userId }).lean().exec();
   }

@@ -45,6 +45,16 @@ export class JobResolver {
     return this.jobService.findAll();
   }
 
+  @Query(() => [Job], {
+    name: 'branchJobs',
+    description: 'All jobs in a single branch',
+  })
+  public async findByBranchId(
+    @Args('branchId') branchId: string,
+  ): Promise<Job[]> {
+    return this.jobService.findByBranchId(branchId);
+  }
+
   @Query(() => Job, { name: 'job' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.jobService.findOne(id);
