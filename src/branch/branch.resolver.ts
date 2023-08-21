@@ -31,6 +31,20 @@ export class BranchResolver {
     return this.branchService.findAll();
   }
 
+  @Query(() => [Branch], {
+    name: 'companyBranches',
+    description: 'Gets all the branches based on the companyId',
+  })
+  async findBranchesByCompanyId(
+    @Args('companyId') companyId: string,
+  ): Promise<BranchGQL[]> {
+    const branches = await this.branchService.findByCompanyId(companyId);
+    return branches.map((branch) => ({
+      ...branch,
+      address: branch.address.coordinates,
+    }));
+  }
+
   /*@Query(() => Branch, { name: 'branch' })
   findOne(@Args('id', { type: () => Int }) id: number) {
     return this.branchService.findOne(id);

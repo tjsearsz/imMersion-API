@@ -20,11 +20,8 @@ export class CompanyService {
     ).toObject();
   }
 
-  public async findByUserId(userId: string): Promise<Company[]> {
-    return this.companyModel
-      .find({ user: new Types.ObjectId(userId) })
-      .lean()
-      .exec();
+  public async findByUserId(userId: Types.ObjectId): Promise<Company[]> {
+    return this.companyModel.find({ user: userId }).lean().exec();
   }
 
   findAll() {

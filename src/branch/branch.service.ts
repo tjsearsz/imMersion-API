@@ -41,6 +41,13 @@ export class BranchService {
     return this.branchModel.find({ ancestors: userId }).lean().exec();
   }
 
+  public async findByCompanyId(companyId: string): Promise<Branch[]> {
+    return this.branchModel
+      .find({ immediateAncestor: new Types.ObjectId(companyId) })
+      .lean()
+      .exec();
+  }
+
   findAll() {
     return `This action returns all branch`;
   }

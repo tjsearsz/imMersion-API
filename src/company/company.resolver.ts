@@ -35,9 +35,9 @@ export class CompanyResolver {
     description: 'Find all companies that belong to the user',
   })
   public async findCompaniesByUserId(
-    @Args('id') userId: string,
+    @CurrentUser() user: IUserSummary,
   ): Promise<Company[]> {
-    return this.companyService.findByUserId(userId);
+    return this.companyService.findByUserId(user.userId);
   }
 
   @Mutation(() => Company)
