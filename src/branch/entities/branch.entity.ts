@@ -1,4 +1,4 @@
-import { ObjectType, Field, Float } from '@nestjs/graphql';
+import { ObjectType, Field, Float, ID } from '@nestjs/graphql';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as mongooseSchema, Types } from 'mongoose';
 import { EOwnership } from '../../enums/EOwnership.js';
@@ -11,6 +11,7 @@ export type BranchGQL = Omit<Branch, 'address'> & { address: number[] };
 @Schema({ timestamps: true })
 @ObjectType()
 export class Branch implements IOwnership {
+  @Field(() => ID, { description: 'ID of the company' })
   _id: Types.ObjectId;
 
   @Prop({
@@ -39,6 +40,9 @@ export class Branch implements IOwnership {
   })
   ancestors: Types.ObjectId[];
 
+  @Field(() => String, {
+    description: 'Company where this branch belongs',
+  })
   @Prop({
     type: mongooseSchema.Types.ObjectId,
     ref: EOwnership.Company,

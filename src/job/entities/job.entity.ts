@@ -1,4 +1,4 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as mongooseSchema, Types } from 'mongoose';
 
@@ -12,6 +12,9 @@ import IOwnership from '../../interfaces/IOwnership.js';
 @Schema({ timestamps: true })
 @ObjectType()
 export class Job implements IOwnership {
+  @Field(() => ID, { description: 'ID of the Job' })
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   @Field({ description: 'Title of the job' })
   name: string;
@@ -19,10 +22,6 @@ export class Job implements IOwnership {
   @Prop({ required: true })
   @Field({ description: 'Complete description of the job' })
   description: string;
-
-  @Prop()
-  @Field({ description: 'URL to redirect if available', nullable: true })
-  redirectURL?: string;
 
   @Prop({ required: true, default: false })
   @Field({ description: 'Determines whether the job is active or not' })
@@ -47,6 +46,9 @@ export class Job implements IOwnership {
   })
   ancestors: Types.ObjectId[];
 
+  @Field(() => String, {
+    description: 'Branch where this job belongs',
+  })
   @Prop({
     type: mongooseSchema.Types.ObjectId,
     ref: EOwnership.Branch,
