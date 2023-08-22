@@ -1,4 +1,4 @@
-import { ObjectType, Field } from '@nestjs/graphql';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Types, Schema as mongooseSchema } from 'mongoose';
 import IOwnership from '../../interfaces/IOwnership.js';
@@ -6,6 +6,7 @@ import IOwnership from '../../interfaces/IOwnership.js';
 @Schema({ timestamps: true })
 @ObjectType()
 export class Company implements IOwnership {
+  @Field(() => ID, { description: 'ID of the company' })
   _id: Types.ObjectId;
 
   @Prop({ required: true })

@@ -21,7 +21,7 @@ export class CompanyService {
   }
 
   public async findByUserId(userId: Types.ObjectId): Promise<Company[]> {
-    return this.companyModel.find({ user: userId }).lean().exec();
+    return this.companyModel.find({ userId: userId }).lean().exec();
   }
 
   findAll() {

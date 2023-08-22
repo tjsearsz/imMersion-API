@@ -11,11 +11,6 @@ export class CreateJobInput {
   @Field({ description: 'Complete description of the new Job' })
   description: string;
 
-  @IsOptional()
-  @IsUrl()
-  @Field({ description: 'URL to redirect if available', nullable: true })
-  redirectURL?: string;
-
   @ValidateNested()
   @Type(() => AugmentedImageInput)
   @Field(() => AugmentedImageInput, {
