@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module.js';
 import mongooseLeanVirtuals from 'mongoose-lean-virtuals';
 import { BranchModule } from './branch/branch.module.js';
 import { JobModule } from './job/job.module.js';
+import { AugmentedImageModule } from './augmented-image/augmented-image.module.js';
 
 //TODO: cleanup code resolvers, methods etc that are not used
 
@@ -25,6 +26,7 @@ import { JobModule } from './job/job.module.js';
     CompanyModule,
     BranchModule,
     JobModule,
+    AugmentedImageModule, //TODO: REMOVE THIS SINCE IT WILL NOT BE NEEDED
     MongooseModule.forRoot(
       'mongodb+srv://tjsearszu:ExUWi56OgBKP2Kzu@immersion-1.avndzry.mongodb.net/?retryWrites=true&w=majority',
       {

@@ -5,6 +5,11 @@ import { EOwnership } from '../../enums/EOwnership.js';
 import IOwnership from '../../interfaces/IOwnership.js';
 import { User } from '../../user/entities/user.entity.js';
 import { Point, PointSchema } from './point.entity.js';
+import { Job } from '../../job/entities/job.entity.js';
+import {
+  AugmentedImage,
+  AugmentedImageSchema,
+} from './augmented-image.entity.js';
 
 export type BranchGQL = Omit<Branch, 'address'> & { address: number[] };
 
@@ -49,6 +54,18 @@ export class Branch implements IOwnership {
     required: true,
   })
   immediateAncestor: Types.ObjectId;
+
+  @Field(() => [Job], {
+    description: 'Jobs that belong to this branch',
+  })
+  jobs: Job[];
+
+  @Prop({
+    type: AugmentedImageSchema,
+    required: true,
+  })
+  @Field(() => AugmentedImage)
+  augmentedImage: AugmentedImage;
 }
 
 export const BranchSchema = SchemaFactory.createForClass(Branch);

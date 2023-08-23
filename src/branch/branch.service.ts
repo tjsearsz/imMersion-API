@@ -69,4 +69,57 @@ export class BranchService {
   remove(id: number) {
     return `This action removes a #${id} branch`;
   }
+
+  async getBranchesWithOpenPositionsWithinRadiusOfCoordinates(
+    coordinates: number[],
+  ): Promise<Branch[]> {
+    const [longitude, latitude] = coordinates;
+    return this.branchModel
+      .aggregate([
+        {
+          $geoNear: {
+            near: {
+              type: 'Point',
+              coordinates: [longitude, latitude],
+            },
+            distanceField: 'dist.distanceField',
+            maxDistance: 100,
+            spherical: false,
+          },
+        },
+        {
+          $lookup: {
+            from: 'jobs',
+            localField: '_id',
+            foreignField: 'immediateAncestor',
+            pipeline: [
+              {
+                $match: {
+                  isEnabled: true,
+                },
+              },
+            ],
+            as: 'jobs',
+          },
+        },
+        {
+          $project: {
+            dist: 0,
+          },
+        },
+        {
+          $match: {
+            $expr: {
+              $ne: [
+                0,
+                {
+                  $size: '$jobs',
+                },
+              ],
+            },
+          },
+        },
+      ])
+      .exec();
+  }
 }

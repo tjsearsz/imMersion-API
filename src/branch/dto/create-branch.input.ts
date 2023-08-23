@@ -1,5 +1,7 @@
 import { InputType, Field, Float } from '@nestjs/graphql';
-import { IsMongoId } from 'class-validator';
+import { IsMongoId, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { AugmentedImageInput } from './augmented-image.input.js';
 
 @InputType()
 export class CreateBranchInput {
@@ -9,4 +11,11 @@ export class CreateBranchInput {
   @IsMongoId()
   @Field({ description: 'Company where this branch belongs to' })
   companyId: string;
+
+  @ValidateNested()
+  @Type(() => AugmentedImageInput)
+  @Field(() => AugmentedImageInput, {
+    description: 'Augmented Image for this Job',
+  })
+  augmentedImage: AugmentedImageInput;
 }

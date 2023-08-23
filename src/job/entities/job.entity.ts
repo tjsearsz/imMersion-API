@@ -2,10 +2,6 @@ import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as mongooseSchema, Types } from 'mongoose';
 
-import {
-  AugmentedImage,
-  AugmentedImageSchema,
-} from './augmented-image.entity.js';
 import { EOwnership } from '../../enums/EOwnership.js';
 import IOwnership from '../../interfaces/IOwnership.js';
 
@@ -26,13 +22,6 @@ export class Job implements IOwnership {
   @Prop({ required: true, default: false })
   @Field({ description: 'Determines whether the job is active or not' })
   isEnabled: boolean;
-
-  @Prop({
-    type: AugmentedImageSchema,
-    required: true,
-  })
-  @Field(() => AugmentedImage)
-  augmentedImage: AugmentedImage;
 
   @Prop({
     type: [
