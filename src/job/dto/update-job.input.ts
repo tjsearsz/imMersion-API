@@ -4,10 +4,7 @@ import { InputType, Field, OmitType } from '@nestjs/graphql';
 // import { PickTypesWrapper } from '../../common/graphql-mapped-types.js';
 
 @InputType()
-export class UpdateJobInput extends OmitType(CreateJobInput, [
-  'augmentedImage',
-  'branchId',
-]) {
+export class UpdateJobInput extends OmitType(CreateJobInput, ['branchId']) {
   @IsMongoId()
   @Field({ description: 'ID of the Job' })
   id: string;

@@ -4,7 +4,7 @@ import { UpdateJobInput } from './dto/update-job.input.js';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Job } from './entities/job.entity.js';
-import { UpdateJobImageInput } from './dto/update-job-image.input.js';
+import { UpdateJobImageInput } from '../branch/dto/update-job-image.input.js';
 import { BranchService } from '../branch/branch.service.js';
 
 @Injectable()
@@ -48,11 +48,12 @@ export class JobService {
       .exec();
   }
 
-  public async findByBranchId(branchId: string): Promise<Job[]> {
-    return this.jobModel
-      .find({ immediateAncestor: new Types.ObjectId(branchId) })
-      .lean()
-      .exec();
+  public async findByBranchId(
+    branchId: string | Types.ObjectId,
+  ): Promise<Job[]> {
+    if (typeof branchId === 'string') branchId = new Types.ObjectId(branchId);
+
+    return this.jobModel.find({ immediateAncestor: branchId }).lean().exec();
   }
 
   public async findByUserId(userId: Types.ObjectId): Promise<Job[]> {

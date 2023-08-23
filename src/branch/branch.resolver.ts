@@ -1,4 +1,4 @@
-import { Resolver, Query, Mutation, Args, Int } from '@nestjs/graphql';
+import { Resolver, Query, Mutation, Args, Int, Float } from '@nestjs/graphql';
 import { BranchService } from './branch.service.js';
 import { Branch, BranchGQL } from './entities/branch.entity.js';
 import { CreateBranchInput } from './dto/create-branch.input.js';
@@ -76,5 +76,22 @@ export class BranchResolver {
   @Mutation(() => Branch)
   removeBranch(@Args('id', { type: () => Int }) id: number) {
     return this.branchService.remove(id);
+  }
+
+  @Query(() => [Branch], {
+    description:
+      'Gets all the Branches that are within the radius of the given coordinates and have open postions',
+    name: 'branchesWithOpenPositionsNearby',
+  })
+  async getBranchesWithOpenPositionsNearby(
+    @Args('coordinates', {
+      type: () => [Float],
+      description: 'Coordinates LONGITUDE/LATITUDE of the user',
+    })
+    coordinates: number[],
+  ): Promise<Branch[]> {
+    return this.branchService.getBranchesWithOpenPositionsWithinRadiusOfCoordinates(
+      coordinates,
+    );
   }
 }

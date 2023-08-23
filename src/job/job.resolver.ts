@@ -4,7 +4,7 @@ import { Job } from './entities/job.entity.js';
 // import { AugmentedImage } from './entities/augmented-image.entity.js';
 import { CreateJobInput } from './dto/create-job.input.js';
 import { UpdateJobInput } from './dto/update-job.input.js';
-import { UpdateJobImageInput } from './dto/update-job-image.input.js';
+// import { UpdateJobImageInput } from '../branch/dto/update-job-image.input.js'; //TODO: CHECK IF WE NEED TO MOVE THIS ENDPOINT TO BRANCH
 import { CurrentUser } from '../decorators/currentUser.js';
 import { IUserSummary } from '../auth/interfaces/IUserSummary.js';
 
@@ -20,7 +20,7 @@ export class JobResolver {
     return this.jobService.create(user.userId, createJobInput);
   }
 
-  @Mutation(() => Job, {
+  /*@Mutation(() => Job, { //TODO: CHECK IF WE NEED TO MOVE THIS ENDPOINT TO BRANCH
     name: 'updateAugmentedImage',
   })
   public async updateAugmentedImageJob(
@@ -38,7 +38,7 @@ export class JobResolver {
     }
 
     return updatedJob;
-  }
+  }*/
 
   @Query(() => [Job], { name: 'job' })
   findAll() {
