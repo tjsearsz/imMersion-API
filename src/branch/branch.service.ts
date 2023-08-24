@@ -75,7 +75,7 @@ export class BranchService {
   ): Promise<Branch[]> {
     const [longitude, latitude] = coordinates;
     return this.branchModel
-      .aggregate([
+      .aggregate<Branch>([
         {
           $geoNear: {
             near: {
@@ -120,6 +120,7 @@ export class BranchService {
           },
         },
       ])
+      .limit(900)
       .exec();
   }
 }
