@@ -19,7 +19,7 @@ export class Job implements IOwnership {
   @Field({ description: 'Complete description of the job' })
   description: string;
 
-  @Prop({ required: true, default: false })
+  @Prop({ required: true, default: true })
   @Field({ description: 'Determines whether the job is active or not' })
   isEnabled: boolean;
 

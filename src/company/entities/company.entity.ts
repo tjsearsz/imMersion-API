@@ -17,7 +17,7 @@ export class Company implements IOwnership {
   @Field({ description: 'Brief information about the company', nullable: true })
   description?: string;
 
-  @Prop({ required: true, default: false })
+  @Prop({ required: true, default: true })
   @Field({ description: 'Determines whether the company is active or not' })
   isEnabled: boolean;
 
