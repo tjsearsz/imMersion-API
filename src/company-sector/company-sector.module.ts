@@ -5,6 +5,7 @@ import {
   CompanySector,
   CompanySectorSchema,
 } from './entities/company-sector.js';
+import { CompanySectorResolver } from './company-sector.resolver.js';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import {
       { name: CompanySector.name, schema: CompanySectorSchema },
     ]),
   ],
-  providers: [CompanySectorService],
+  providers: [CompanySectorService, CompanySectorResolver],
   exports: [CompanySectorService],
 })
 export class CompanySectorModule {}
