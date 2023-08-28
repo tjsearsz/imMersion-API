@@ -5,6 +5,7 @@ import { Company } from './entities/company.entity.js';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { CompanySectorService } from '../company-sector/company-sector.service.js';
+import { CompanySector } from '../company-sector/entities/company-sector.js';
 
 @Injectable()
 export class CompanyService {
@@ -34,10 +35,12 @@ export class CompanyService {
     return `This action returns all company`;
   }
 
-  public async findOne(
-    companyId: string | Types.ObjectId,
-  ): Promise<Company | null> {
-    return this.companyModel.findById(companyId).lean().exec();
+  public async findOne(companyId: string | Types.ObjectId) {
+    return this.companyModel
+      .findById(companyId)
+      .populate<{ companySector: CompanySector }>('companySector')
+      .lean()
+      .exec();
   }
 
   public async update(

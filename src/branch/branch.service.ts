@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Branch } from './entities/branch.entity.js';
 import { Model, Types } from 'mongoose';
 import { CompanyService } from '../company/company.service.js';
+import { AugmentedImage } from './entities/augmented-image.entity.js';
 
 @Injectable()
 export class BranchService {
@@ -17,7 +18,7 @@ export class BranchService {
     userId: Types.ObjectId,
     createBranchInput: CreateBranchInput,
   ): Promise<Branch> {
-    const { companyId, address, ...rest } = createBranchInput;
+    const { companyId, address, augmentedImage, ...rest } = createBranchInput;
 
     const companyFound = await this.companyService.findOne(companyId);
 
@@ -25,9 +26,15 @@ export class BranchService {
       throw new Error('CompanyId does not exist');
     }
 
+    const augmentedImagePayload: AugmentedImage = {
+      ...augmentedImage,
+      modelURL: companyFound.companySector.imageModel.url,
+    };
+
     return (
       await this.branchModel.create({
         ...rest,
+        augmentedImage: augmentedImagePayload,
         address: {
           coordinates: address,
         },
