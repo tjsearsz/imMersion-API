@@ -4,17 +4,24 @@ import { UpdateCompanyInput } from './dto/update-company.input.js';
 import { Company } from './entities/company.entity.js';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
+import { CompanySectorService } from '../company-sector/company-sector.service.js';
+import { CompanySector } from '../company-sector/entities/company-sector.js';
 
 @Injectable()
 export class CompanyService {
   constructor(
     @InjectModel(Company.name) private readonly companyModel: Model<Company>,
+    private readonly companySectorService: CompanySectorService,
   ) {}
 
   public async create(
     userId: Types.ObjectId,
     createCompanyInput: CreateCompanyInput,
   ): Promise<Company> {
+    await this.companySectorService.validateCompanySectorExists(
+      createCompanyInput.companySector,
+    );
+
     return (
       await this.companyModel.create({ userId, ...createCompanyInput })
     ).toObject();
@@ -28,16 +35,22 @@ export class CompanyService {
     return `This action returns all company`;
   }
 
-  public async findOne(
-    companyId: string | Types.ObjectId,
-  ): Promise<Company | null> {
-    return this.companyModel.findById(companyId).lean().exec();
+  public async findOne(companyId: string | Types.ObjectId) {
+    return this.companyModel
+      .findById(companyId)
+      .populate<{ companySector: CompanySector }>('companySector')
+      .lean()
+      .exec();
   }
 
   public async update(
     id: string,
     updateCompanyInput: Omit<UpdateCompanyInput, 'id'>,
   ): Promise<Company | null> {
+    await this.companySectorService.validateCompanySectorExists(
+      updateCompanyInput.companySector,
+    );
+
     return this.companyModel
       .findByIdAndUpdate(id, updateCompanyInput)
       .lean()

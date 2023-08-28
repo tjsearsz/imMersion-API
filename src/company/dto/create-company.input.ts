@@ -1,4 +1,5 @@
 import { InputType, Field } from '@nestjs/graphql';
+import { IsMongoId } from 'class-validator';
 
 @InputType()
 export class CreateCompanyInput {
@@ -10,4 +11,10 @@ export class CreateCompanyInput {
     nullable: true,
   })
   description?: string;
+
+  @IsMongoId()
+  @Field({
+    description: 'ID of the sector for this company',
+  })
+  companySector: string;
 }

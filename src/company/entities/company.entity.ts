@@ -24,6 +24,13 @@ export class Company implements IOwnership {
   @Prop({ required: true, type: mongooseSchema.Types.ObjectId, ref: 'User' })
   userId: Types.ObjectId;
 
+  @Prop({
+    required: true,
+    type: mongooseSchema.Types.ObjectId,
+    ref: 'CompanySector',
+  })
+  companySector: Types.ObjectId;
+
   /*@Prop({
     type: [
       {
