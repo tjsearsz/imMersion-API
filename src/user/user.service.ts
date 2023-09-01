@@ -43,4 +43,17 @@ export class UserService {
   public async AuthenticateUser(email: string): Promise<User | null> {
     return this.userModel.findOne({ email }).lean().exec();
   }
+
+  public async changeBusinessOwnerStatus(
+    userId: Types.ObjectId,
+    isBusinessOwner: boolean,
+  ): Promise<boolean> {
+    this.userModel
+      .findByIdAndUpdate(userId, {
+        isBusinessOwner,
+      })
+      .exec();
+
+    return true;
+  }
 }
