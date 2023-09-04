@@ -16,6 +16,10 @@ const result = await companySectorService.create({
     size: 6574824,
     type: 'image/png',
     filename: 'temp.png',
+    scale: 1,
+    summaryScale: 1,
+    summaryX: 1,
+    summaryZ: 1,
   },
 });
 

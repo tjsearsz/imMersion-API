@@ -26,9 +26,16 @@ export class BranchService {
       throw new Error('CompanyId does not exist');
     }
 
+    const { url, scale, summaryScale, summaryX, summaryZ } =
+      companyFound.companySector.imageModel;
+
     const augmentedImagePayload: AugmentedImage = {
       ...augmentedImage,
-      modelURL: companyFound.companySector.imageModel.url,
+      modelURL: url,
+      scale,
+      summaryScale,
+      summaryX,
+      summaryZ,
     };
 
     return (
