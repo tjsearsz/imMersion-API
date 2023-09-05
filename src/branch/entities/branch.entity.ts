@@ -27,6 +27,10 @@ export class Branch implements IOwnership {
   @Field(() => [Float], { description: 'Address of the branch' })
   address: Point;
 
+  @Prop({ required: true })
+  @Field({ description: 'The full address in text' })
+  fullAddress: string;
+
   @Prop({ required: true, default: true })
   @Field({
     description: 'Determines whether this branch is still available or not',

@@ -5,6 +5,7 @@ import { InputType, Field, PickType } from '@nestjs/graphql';
 @InputType()
 export class UpdateBranchInput extends PickType(CreateBranchInput, [
   'address',
+  'fullAddress',
 ]) {
   @IsMongoId()
   @Field({ description: 'ID of the branch' })
