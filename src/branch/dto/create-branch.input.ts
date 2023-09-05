@@ -8,6 +8,9 @@ export class CreateBranchInput {
   @Field(() => [Float], { description: 'Address of this Branch Long/Lat' })
   address: number[];
 
+  @Field({ description: 'The full address in text of the user' })
+  fullAddress: string;
+
   @IsMongoId()
   @Field({ description: 'Company where this branch belongs to' })
   companyId: string;
