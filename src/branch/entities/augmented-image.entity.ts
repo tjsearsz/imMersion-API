@@ -20,13 +20,6 @@ export class AugmentedImage {
   })
   imageURL: string;
 
-  @Prop()
-  @Field({
-    description: 'Redirect page when clicking the image',
-    nullable: true,
-  })
-  redirectURL?: string;
-
   @Field(() => Float, {
     description: 'Scale that the Augmented Image will have',
   })

@@ -6,6 +6,7 @@ import { Model, Types } from 'mongoose';
 import { Job } from './entities/job.entity.js';
 import { UpdateJobImageInput } from '../branch/dto/update-job-image.input.js';
 import { BranchService } from '../branch/branch.service.js';
+import prependHttp from 'prepend-http';
 
 @Injectable()
 export class JobService {
@@ -18,7 +19,7 @@ export class JobService {
     userId: Types.ObjectId,
     createJobInput: CreateJobInput,
   ): Promise<Job> {
-    const { branchId, ...rest } = createJobInput;
+    const { branchId, redirectURL, ...rest } = createJobInput;
 
     const branchFound = await this.branchService.findOne(branchId);
 
@@ -30,6 +31,7 @@ export class JobService {
         ...rest,
         ancestors: [userId, branchFound._id, branchFound.immediateAncestor],
         immediateAncestor: branchFound._id,
+        redirectURL: redirectURL && prependHttp(redirectURL),
       })
     ).toObject();
   }
