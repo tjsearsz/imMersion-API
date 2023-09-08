@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Schema as mongooseSchema, Types } from 'mongoose';
 
@@ -44,6 +44,17 @@ export class Job implements IOwnership {
     required: true,
   })
   immediateAncestor: Types.ObjectId;
+
+  @Prop()
+  @Field({
+    description: 'Redirect page when checking the information of the job',
+    nullable: true,
+  })
+  redirectURL?: string; //TODO: REPLACE THIS WITH URL type
+
+  @Prop()
+  @Field(() => Int, { description: 'number of open positions available' })
+  positions: number;
 }
 
 export const JobSchema = SchemaFactory.createForClass(Job);
